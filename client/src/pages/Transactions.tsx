@@ -1,5 +1,5 @@
 const Transactions = () => {
-	return <div></div>
+	return <div>Transactions</div>
 }
 
 export default Transactions

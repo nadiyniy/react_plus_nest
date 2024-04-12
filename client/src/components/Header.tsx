@@ -1,16 +1,31 @@
 import { FC } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { FaBtc, FaSignOutAlt } from 'react-icons/fa'
+import { useAuth } from '../hooks/useAuth'
+import { useAppDispatch } from '../store/hooks'
+import { logout } from '../store/user/userSlice'
+import { removeTokenFromLocalStorage } from '../helpers/loacalStorege.helper'
+import { toast } from 'react-toastify'
 
 const Header: FC = () => {
-	const isAuth = true
+	const isAuth = useAuth()
+	const dispatch = useAppDispatch()
+	const navigate = useNavigate()
+
+	const logoutHandler = () => {
+		removeTokenFromLocalStorage('token')
+		dispatch(logout())
+		toast.info('you logout')
+		navigate('/')
+	}
+
 	return (
 		<header className="flex items-center p-4 shadow-sm bg-slate-800 backdrop-blur-sm">
 			<Link to="/">
 				<FaBtc size={20} />
 			</Link>
 			{isAuth && (
-				<nav className='ml-auto mr-10'>
+				<nav className="ml-auto mr-10">
 					<ul className="flex items-center gap-5">
 						<li>
 							<NavLink to="/" className={({ isActive }) => (isActive ? 'text-white' : 'text-white/50')}>
@@ -31,7 +46,7 @@ const Header: FC = () => {
 				</nav>
 			)}
 			{isAuth ? (
-				<button className="btn btn-red">
+				<button className="btn btn-red" onClick={logoutHandler}>
 					<span>Log out</span>
 					<FaSignOutAlt />
 				</button>
